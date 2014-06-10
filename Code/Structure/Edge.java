@@ -1,9 +1,16 @@
 package Structure;
+import Generator.MyRandom;
 
 
 public class Edge {
-	public int weight;
 	public Node input;
 	public Node output;
+	public int weight;
+	
+	public String toString() {
+		return ""+output.id;
+	}
+	public Edge() {
+		weight = MyRandom.randomInteger(100);
+	}
 }
-

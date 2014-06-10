@@ -1,5 +1,10 @@
 package Generator;
 
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -8,11 +13,12 @@ import Structure.Graph;
 import Structure.Node;
 
 public class GraphGenerator {
-	private int nNodes = 200;
+	private int nNodes = 100;
 	private int nEdges = 40;
-	private int levels = 12;
+	private int levels = 5;
 	private SkiSet topSet = null;
-	private Graph graph;
+	public Node root;
+	public Node end;
 	private int nodeCounter = 0;
 	private ArrayList<Node> allNodes = new ArrayList<Node>();
 	private ArrayList<Edge> allEdges = new ArrayList<Edge>();
@@ -20,18 +26,48 @@ public class GraphGenerator {
 	public static void main(String args[]) {
 		GraphGenerator gn = new GraphGenerator();
 		
-		gn.graph = new Graph();
-		gn.graph.root = null;
-		gn.graph.end = null;
+		//gn.graph = new Graph();
+		gn.root = null;
+		gn.end = null;
 		
 		gn.fillSets();
 		gn.generateDescendingEdges();
 		gn.displayGraph();
-		System.out.println(gn.generateGraphML());
+		String tmptxt = gn.generateGraphML();
+		//System.out.println(tmptxt);
+		
+		gn.saveGraphMLFile(tmptxt);
+	}
+	
+	public GraphGenerator() {
+		this(100, 5);
+	}
+	
+	public GraphGenerator(int n, int l) {
+		nNodes = n;
+		levels = l;
+		
+		fillSets();
+		generateDescendingEdges();
+		saveGraphMLFile(generateGraphML());
 	}
 	
 	public Graph generateGraph() {
 		return null;
+	}
+	
+	public void saveGraphMLFile(String graphML) {
+		PrintWriter out = null;
+		try {
+			out = new PrintWriter("test.graphml");
+			out.println(graphML);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}  finally {
+			out.close();
+		}
+		
 	}
 	
 	public String generateGraphML() {
@@ -86,10 +122,10 @@ public class GraphGenerator {
 		SkiSet currentSet = new SkiSet();
 		SkiSet tmpSon;
 		int remainingNodes = nNodes;
-		graph.end = new Node();
-		allNodes.add(graph.end);
-		currentSet.addNode(graph.end);
-		graph.end.id = nodeCounter++;
+		end = new Node();
+		allNodes.add(end);
+		currentSet.addNode(end);
+		end.id = nodeCounter++;
 		currentSet.level = 0;
 		
 		
@@ -119,7 +155,7 @@ public class GraphGenerator {
 		currentSet.son = tmpSon;
 		currentSet.level = tmpSon.level+1;
 		topSet = currentSet;
-		graph.root = root;
+		root = root;
 		root.id = nodeCounter++;
 	}
 	
@@ -175,7 +211,7 @@ public class GraphGenerator {
 	
 	public Node findEdgeRec(SkiSet currentSet, int distance) {
 		if(currentSet == null) {
-			return graph.end;
+			return end;
 		}
 		else {
 			if(MyRandom.inverseExponentialTest(distance)) {
