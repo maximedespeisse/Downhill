@@ -50,6 +50,8 @@ public class GraphGenerator {
 		fillSets();
 		generateDescendingEdges();
 		saveGraphMLFile(generateGraphML());
+		//displayGraph();
+		//System.out.println(root);
 	}
 	
 	public Graph generateGraph() {
@@ -59,7 +61,7 @@ public class GraphGenerator {
 	public void saveGraphMLFile(String graphML) {
 		PrintWriter out = null;
 		try {
-			out = new PrintWriter("test.graphml");
+			out = new PrintWriter("test100.graphml");
 			out.println(graphML);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -149,7 +151,7 @@ public class GraphGenerator {
 		}
 		tmpSon = currentSet;
 		currentSet = new SkiSet();
-		Node root = new Node();
+		root = new Node();
 		currentSet.addNode(root);
 		allNodes.add(root);
 		currentSet.son = tmpSon;
